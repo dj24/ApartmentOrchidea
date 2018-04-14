@@ -1,0 +1,263 @@
+<!- 100125289 -->
+<!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+<head>
+<title>Apartment Orchidea</title>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="js/reviews.js"></script>
+<script src="js/jquery-3.1.1.min.js"></script>
+
+<script>
+	$( document ).ready(function() {
+		$(window).resize(function(){location.reload();});	
+		
+		$('nav a').click(function(){
+			var target = $(this).attr('href');
+			var pos = $(target).offset().top;
+			var scroll = $(window).scrollTop();
+			var height = $(window).height();
+			var height_offset = height*0.09;
+			var body = $("html, body");
+			
+			body.stop().animate({scrollTop:pos - height_offset}, '500', 'swing');
+		});
+		
+		$(window).scroll(function(){
+			
+			var height = $(window).scrollTop();
+			
+			var threshold = height + $( window ).height()/2;
+			
+			//adds border to section of the nav bar that the user has scrolled to
+			if(threshold > $('#reviews').offset().top){
+				$('#nav a').removeClass('select');
+				$('#nav a:nth-child(5)').addClass('select');
+			}
+			else if(threshold > $('#location').offset().top){
+				$('#nav a').removeClass('select');
+				$('#nav a:nth-child(4)').addClass('select');
+			}
+			else if(threshold > $('#gallery').offset().top){
+				$('#nav a').removeClass('select');
+				$('#nav a:nth-child(3)').addClass('select');
+			}
+			
+			else if(threshold > $('#test').offset().top){
+				$('#nav a').removeClass('select');
+				$('#nav a:nth-child(2)').addClass('select');
+			}
+			else{
+				$('#nav a').removeClass('select');
+				$('#nav a:nth-child(1)').addClass('select');
+			}
+			
+			//changes position of header image depending on scrolling, for paralax effect
+			var offset = (height - 300)*0.3;
+			$('#main_img img').css('transform', 'translateY(' + offset  + 'px)');
+			$('#sub_img img').css('transform', 'translateY(' + ((height-2500)*0.3)  + 'px)');
+			if(height > $( window ).height()*0.94){
+				$('#nav').addClass('fixed');
+				$('#main').addClass('nav_offset');
+			}
+			else{
+				$('#nav').removeClass('fixed');
+				$('#main').removeClass('nav_offset');
+			}
+		});
+		
+		function lightBox_open(){
+			$('#lightBox').fadeIn();
+			$('body').css("overflow","hidden");
+		}
+		function lightBox_close(){
+			$('#lightBox').fadeOut();
+			$('body').css("overflow","visible");
+		}
+		function test(){
+			alert("test");
+		}
+		
+		var imgNo = 1;
+		
+		function createSlider(){ //seperates image slides for the gallery
+			var gImg = $('#container img');
+			var imgWidth = gImg.width();
+			for(i = 1; i < gImg.length; i++){
+				$('#slides :nth-child(' + i + ')').css('margin-left', imgWidth*(i) + 'px');
+			}
+			$('#counter').text('Image ' + imgNo + ' of ' + gImg.length);
+			$('#prev').hide();
+		}
+		createSlider();
+		
+		var gImg = $('#gallery img');
+		var gWidth = gImg.width(); //gets width of gallery images
+		
+		function changeSlide(offset){ // function to move to next or previous slide
+			if(slideOffset + offset <= gWidth*(gImg.length-1) && slideOffset + offset>=0){ //disallows the gallery to slide into blank space
+				slideOffset += offset;
+				if(offset < 0)//updates image number on gallery
+					imgNo --;
+				else
+					imgNo ++;
+				$('#counter').text('Image ' + imgNo + ' of ' + gImg.length);
+				$('#slides').css('transform', 'translateX(' + -slideOffset + 'px)');
+				//hides next and back buttons if the end or start of the gallery are reached
+				if(slideOffset == 0)
+					$('#prev').fadeOut();
+				else if(slideOffset == gWidth*(gImg.length-1))
+					$('#next').fadeOut();
+				else
+					$('#container span').fadeIn();
+			}
+			
+		}
+		var slideOffset = 0;
+		
+		$('#next').click(function(){
+			changeSlide(gWidth);//goes to next slide
+		});
+		$('#prev').click(function(){
+			changeSlide(-gWidth);//goes to previous slide
+		});
+		gImg.click(function(){
+			lightBox_open();
+			var src = $(this).attr('src');
+			$('#lightBox > img').attr('src',src);
+		});
+		$('#lightBox .close').click(function(){
+			lightBox_close();
+		});
+		$('#thumbs img').click(function(){
+			var src = $(this).attr('src');
+			$('#thumbs img').removeClass('opaque');
+			$(this).addClass('opaque');
+			$('#lightBox > img').attr('src',src);
+		});
+	});
+</script>
+
+</head>
+<body onload="loadReviews()">
+	<div id="lightBox">
+		<img src="img/venice1.jpg" >
+		<div class="close">x</div>
+		<div id="thumbs">
+			<img src="img/venice1.jpg">
+			<img src="img/venice2.jpg">
+			<img src="img/venice3.jpg">
+			<img src="img/venice4.jpg">
+			<img src="img/venice5.jpg">
+		</div>
+	</div>
+	
+		<div id="main_img">
+			<div class="paralax">
+			<h1>Apartment Orchidea</h1>
+				<img src="img/main.jpg">
+				
+		</div>
+		</div>
+	<div id="nav">
+		<div id="nav_container">
+			
+			<nav>
+				<a  href="#main_img">Home</a>
+				<a href="#test">Info</a>
+				<a href="#gallery">Gallery</a>
+				<a href="#location">Location</a>
+							
+			</nav>
+		</div>
+	</div>
+	<div id="main">
+		<section id="test">
+			<h2>the experience</h2>
+			<div class="inline left">
+				<p>
+				Accommodates: <b>8</b><br><br>
+				Bathrooms: <b>2</b><br><br>
+				Bedrooms: <b>2</b><br><br>
+				Beds: <b>4</b><br><br>
+				Check In: <b>2PM - 7PM</b><br><br>
+				Check Out: <b>10AM</b><br><br>
+				Property type: <b>Apartment</b><br><br>
+				Room type: <b>Entire home/flat</b><br><br>
+				</p>
+			</div>
+			<div class="inline right">
+				<p>
+					The apartment Orchidea is newly refurbished, modern-style decorated. 
+					It is the perfect solution for those who want to stay in Venice in the
+					city centre but at the same time in a quiet environment. It has independent 
+					access and is located on the first floor with 2 triple rooms and a bathroom 
+					with a bathtub. On the second floor there are a living room with a sofa bed,
+					a kitchen area and the second bathroom with a shower.
+				</p>
+				<p>This apartment is located in the Sestiere of Santa Croce, the ancient
+					heart of the city, from where you can easily get both to the train station 
+					and to P.le Roma, the two main Venice 's terminals. Rialto and Accademia can
+					be easily reached in less than ten minutes. Very closed to the water bus stop of 
+					Riva de Biasio, this area is rich of good restaurants and shops.
+				</p>
+			</div>
+		</section>
+		
+		<section id="gallery">
+			<h2>Gallery</h2>
+			<div id="container">
+				<span id="prev"><</span>
+				<span id="next">></span>
+				<p id="counter"></p>
+				<div id="slides">
+					<img src="img/venice5.jpg">
+					<img src="img/venice4.jpg">
+					<img src="img/venice3.jpg">
+					<img src="img/venice2.jpg">
+					<img src="img/venice1.jpg">
+				</div>
+			</div>
+			
+		</section>
+		</div>
+		<div id="sub_img">
+			<div class="paralax">
+				<img src="img/venice2.jpg">
+			</div>
+		</div>
+		<div id="main">
+		<section id="location">
+			<h2>Location</h2>
+			<p>
+				Venice is a city in northeastern Italy and the capital of the Veneto region. It is situated across 
+				a group of 117 small islands that are separated by canals and linked by bridges. These are located 
+				in the shallow Venetian Lagoon, an enclosed bay that lies between the mouths of the Po and the Piave Rivers.
+				Parts of Venice are renowned for the beauty of their settings, their architecture, and artwork. The lagoon and
+				a part of the city are listed as a World Heritage Site.
+			<br><br>
+			This apartment is located in the Sestiere of Santa Croce, the ancient heart of the city, 
+			from where you can easily get both to the train station and to P.le Roma, the two main Venice 
+			's terminals. Rialto and Accademia can be easily reached in less than ten minutes. Very closed 
+			to the water bus stop of Riva de Biasio, this area is rich of good restaurants and shops.
+			</p>
+			<iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d9416.821244607854!2d12.32462958203319!3d45.43680409639076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1srestaurants+in+venice!5e0!3m2!1sen!2suk!4v1479307522173" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+		</section>
+		<section id="reviews">
+			<h2>Reviews</h2>
+			<div id="commentInput">																			 
+                <input id="name" type="text" size="30" placeholder="Your Name"><br/><br/>
+                <textarea id="text" rows="5" placeholder="Your Review"></textarea><br/><br/>
+                <button onclick="clearReview()"> Clear </button>
+                <button onclick="saveReview()"> Send </button>
+            </div>
+			<div id="pastReviews"> </div>
+		</section>
+		</div>
+	<footer>
+		Apartment Orchidea - 01234 789234
+	</footer>
+</body>
+</html>
